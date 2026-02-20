@@ -1,8 +1,8 @@
 const express = require('express');
 const blackLIstTokenModel = require('../models/blackLIstToken.model');
-const userModel = require('../models/user.model');
+const captainModel = require('../models/captain.model');
 const jwt = require('jsonwebtoken');
-module.exports.authUser = async (req,res,next)=>{
+module.exports.authCaptain = async (req,res,next)=>{
     const token = req.cookies.token || req.headers.authorization?.split(' ')[1];
     console.log("token",token);
     
@@ -19,13 +19,13 @@ console.log("hello")
         
         const decode = jwt.verify(token,process.env.JWT_SECRET);
 
-        const user = await userModel.findById(decode._id);
+        const captain = await captainModel.findById(decode._id);
 
-        if(!user){
+        if(!captain){
             return res.status(401).json({message: 'Unauthorized access'})
         }
 
-        req.user = user;
+        req.captain = captain;
         next();
 
     } catch (error) {
